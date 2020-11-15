@@ -13,13 +13,13 @@ const SignupForm = () => {
      email: '', 
      password: '' 
     });
+  const [addUser, {error}] = useMutation(ADD_USER);
+
   // set state for form validation
   const [validated] = useState(false);
 
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-
-  const [addUser, {error}] = useMutation(ADD_USER);
 
   useEffect(()=> {
     if(error) {
@@ -30,7 +30,6 @@ const SignupForm = () => {
   }, [error]);
 
   const handleInputChange = (event) => {
-
     const { name, value } = event.target;
 
     setUserFormData({ 
@@ -44,28 +43,33 @@ const SignupForm = () => {
     console.log("signup clicked");
     console.log(userFormData)
 
-    // // check if form has everything (as per react-bootstrap docs)
-    // const form = event.currentTarget;
-    // if (form.checkValidity() === false) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-    // }
+    // check if form has everything (as per react-bootstrap docs)
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
 
-    // try {
-    //   const {data} = await addUser({
-    //     varaibles: {...userFormData },
-    //   });
-    //   console.log(data)
-    //   Auth.login(data.addUser.token);
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    try {
+      const mutationResponse = await addUser({
+        variables: { 
+          username: userFormData.username.trim(),
+          email:userFormData.email.trim(),
+          password: userFormData.password.trim()
+         },
+      });
+      console.log(mutationResponse);
+      const token = mutationResponse.data.addUser.token
+      Auth.login(token);
+    } catch (err) {
+      console.error(err);
+    }
 
-    // setUserFormData({
-    //   username: '',
-    //   email: '',
-    //   password: '',
-    // });
+    setUserFormData({
+      username: '',
+      email: '',
+      password: '',
+    });
   };
 
   return (
