@@ -16,7 +16,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  const [saveBook, {error}] = useMutation(SAVE_BOOK)
+  const [saveBook, {error}] = useMutation(SAVE_BOOK);
 
 useEffect(() => {
   return() => saveBookIds(savedBookIds);
@@ -68,19 +68,20 @@ useEffect(() => {
     console.log("click");
     console.log(bookToSave);
     console.log(token);
-    // try {
-    //   const { data } = await saveBook({
-    //     variables: { bookData: { ...bookToSave } },
-    //   });
-    //   console.log(savedBookIds    );
+
+    try {
+      const { data } = await saveBook({
+        variables: { books: { ...bookToSave } },
+      });
+      console.log(savedBookIds);
       
       
 
     //   // if book successfully saves to user's account, save book id to state
     //   setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
