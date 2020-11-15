@@ -9,11 +9,11 @@ import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
 
-  const {loading, data } = useQuery(ME_QUERY);
+  const { loading, data } = useQuery(ME_QUERY);
   const [removeBook, {error}] = useMutation(REMOVE_BOOK);
 
   const userData = data?.me || {};
-
+  console.log(userData);
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -24,7 +24,7 @@ const SavedBooks = () => {
 
     try {
       const { data } = await removeBook({
-        variables:{ bookId },
+        variables: { bookId },
       });
 
       // upon success, remove book's id from localStorage
@@ -48,7 +48,7 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks.length
+          {userData.savedBooks?.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
